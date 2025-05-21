@@ -50,12 +50,13 @@ namespace S1Functions
 
     public static class ChatbotFunctions
     {
-        private static readonly string eventGridEndpoint = "https://<your-eventgrid-topic>.westus2-1.eventgrid.azure.net/api/events";
-        private static readonly string eventGridKey = "<your-eventgrid-key>";
-        private static readonly string openAiApiKey = "<your-openai-api-key>";
-        private static readonly string serpApiKey = "<your-serpapi-key>";
-        private static readonly string cosmosEndpoint = "<your-cosmos-endpoint>";
-        private static readonly string cosmosKey = "<your-cosmos-key>";
+        private static readonly string chatInboxTopic = Environment.GetEnvironmentVariable("ChatBotInboxTopic") ?? "key-not-set";
+        private static readonly string eventGridEndpoint = $"https://{chatInboxTopic}.westus2-1.eventgrid.azure.net/api/events";
+        private static readonly string eventGridKey = Environment.GetEnvironmentVariable("EventGridKey")??"key-not-set";
+        private static readonly string openAiApiKey = Environment.GetEnvironmentVariable("OpenAiApiKey")??"key-not-set";
+        private static readonly string serpApiKey = Environment.GetEnvironmentVariable("SerpApiKey")??"key-not-set";
+        private static readonly string cosmosEndpoint = Environment.GetEnvironmentVariable("CosmosEndpoint")??"key-not-set";
+        private static readonly string cosmosKey = Environment.GetEnvironmentVariable("CosmosKey")??"key-not-set";
         private static readonly string cosmosDatabaseId = "ChatbotDB";
         private static readonly string cosmosContainerId = "Conversations";
 
@@ -71,6 +72,7 @@ namespace S1Functions
             log.LogInformation("Chat trigger function processed a request.");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             string message = data?.message;
             string conversationId = data?.conversationId ?? $"conv_{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}";

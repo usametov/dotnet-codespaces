@@ -2,6 +2,12 @@
   "IsEncrypted": false,
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "FUNCTIONS_WORKER_RUNTIME": "dotnet"
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "ChatBotInboxTopic": "chat-inbox", 
+    "EventGridKey": "your-key-here",
+    "OpenAiApiKey": "your-key-here",
+    "CosmosKey": "your-key-here",
+    "SerpApiKey": "serp-key",
+    "CosmosEndpoint": "my cosmos"
   }
 }
