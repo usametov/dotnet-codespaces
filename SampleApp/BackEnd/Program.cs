@@ -13,13 +13,14 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.Azure.WebJobs.Extensions.EventGrid;
+using Microsoft.Azure.WebJobs.Extensions.Http;
 
 namespace S1Functions
 {
     public class ClientData
     {
         [JsonProperty("id")]
-        public string ConversationId { get; set; }
+        public required string ConversationId { get; set; }
         public string Company { get; set; }
         public string Role { get; set; }
         public string Kpis { get; set; }
@@ -113,8 +114,8 @@ namespace S1Functions
             ClientData clientData = new ClientData { ConversationId = conversationId };
             try
             {
-                var response = await container.ReadItemAsync<ClientData>(conversationId, new PartitionKey(conversationId));
-                clientData = response.Resource ?? clientData;
+                var itemResponse = await container.ReadItemAsync<ClientData>(conversationId, new PartitionKey(conversationId));
+                clientData = itemResponse.Resource ?? clientData;
             }
             catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
